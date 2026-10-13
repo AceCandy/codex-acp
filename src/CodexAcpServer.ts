@@ -146,6 +146,7 @@ import {listCodexHooks, trustCodexHooks, type CodexHookIdentity} from "./CodexHo
 import type {HooksListEntry} from "./app-server/v2/HooksListEntry";
 import {
     accountFromUpdated,
+    agentConfiguredProviderStatus,
     fromAccount,
     fromAccountUpdated,
     gatewayStatus,
@@ -1746,7 +1747,7 @@ export class CodexAcpServer {
         }
         const modelProvider = await this.runWithProcessCheck(() => this.codexAcpClient.getAgentConfiguredModelProvider());
         if (!this.authProviderUsesOpenAiAccount(modelProvider)) {
-            return gatewayStatus(modelProvider);
+            return agentConfiguredProviderStatus(modelProvider);
         }
         const accountResponse = await this.runWithProcessCheck(() => this.codexAcpClient.getAccount());
         this.lastReadAccount = accountResponse.account;
@@ -1779,7 +1780,7 @@ export class CodexAcpServer {
             await this.publishAuthStatusRead();
             return;
         }
-        await this.setAuthStatus(gatewayStatus(authProvider));
+        await this.setAuthStatus(agentConfiguredProviderStatus(authProvider));
     }
 
     /**
